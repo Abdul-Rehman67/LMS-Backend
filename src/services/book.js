@@ -18,7 +18,24 @@ const addBooksService = async (payload) => {
 const getAllBookService = async () => {
     try {
         const book = await Book.find()
+        console.log(book)
         if (book.length > 0) {
+            return { status: true, message: "Books Selected Successfully", book, code: 200 };
+        }
+        else {
+            return { status: false, message: "Sorry no books found", code: 404 };
+        }
+    } catch (err) {
+        console.log(err)
+        return { status: false, message: "Server Error", code: 500 };
+    }
+
+}
+const getSingleBookService = async (id) => {
+    try {
+        const book = await Book.findById(id)
+        console.log(book)
+        if (book) {
             return { status: true, message: "Books Selected Successfully", book, code: 200 };
         }
         else {
@@ -55,9 +72,12 @@ const CheckedIn = async (id) => {
 
 }
 const CheckedOut = async (payload, id) => {
-    const { name, mobileNumber, nationalID } = payload;
+    console.log(payload)
+    const { name, mobileNumber, nationalID } = payload.formData;
     try {
         const book = await Book.findById(id);
+        console.log(id, book)
+
         console.log(book)
         if (!book) {
             return { status: false, message: "Sorry no books found", code: 404 };
@@ -102,4 +122,4 @@ const CheckedOut = async (payload, id) => {
 
 }
 
-module.exports = { addBooksService, getAllBookService, CheckedOut, CheckedIn }
+module.exports = { addBooksService, getAllBookService, CheckedOut, CheckedIn, getSingleBookService }

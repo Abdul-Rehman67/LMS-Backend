@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 app.get('/', (req, res) => {
-  res.send('Hello expense tracker!')
+  res.send('Hello From LMS')
 })
 // 
 

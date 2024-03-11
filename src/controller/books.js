@@ -1,5 +1,5 @@
 const { response } = require("../dto/send.response");
-const { addBooksService, getAllBookService, CheckedOut, CheckedIn } = require("../services/book");
+const { addBooksService, getAllBookService, CheckedOut, CheckedIn, getSingleBookService } = require("../services/book");
 const addBookController = async (req, res) => {
   try {
 
@@ -20,7 +20,21 @@ const getAllBookController = async (req, res) => {
   try {
     let result = await getAllBookService();
     if (result) {
-      return res.status(result.code).send(response(result.status, result.message, result.find));
+      return res.status(result.code).send(response(result.status, result.message, result.book));
+    } else {
+      return res.status(result.code).send(response(result.status, result.message || "Something went wrong, Please try again later", {}));
+    }
+  }
+  catch (e) {
+    return res.send(response(false, "Server Error!", {}));
+  }
+};
+const getSingleBookController = async (req, res) => {
+  try {
+    id = req.params.id
+    let result = await getSingleBookService(id);
+    if (result) {
+      return res.status(result.code).send(response(result.status, result.message, result.book));
     } else {
       return res.status(result.code).send(response(result.status, result.message || "Something went wrong, Please try again later", {}));
     }
@@ -36,9 +50,11 @@ const CheckOutController = async (req, res) => {
     console.log(id)
     let result = await CheckedOut(payload, id);
     if (result) {
-      return res.status(result.code).send(response(result.status, result.message, result.find));
+      // return res.status(result.code).send(response(result.status, result.message, result.find));
+      return res.send(response(result.status, result.message, result.find));
     } else {
-      return res.status(result.code).send(response(result.status, result.message || "Something went wrong, Please try again later", {}));
+      return res.send(response(result.status, result.message || "Something went wrong, Please try again later", {}));
+      // return res.status(result.code).send(response(result.status, result.message || "Something went wrong, Please try again later", {}));
     }
   }
   catch (e) {
@@ -63,5 +79,5 @@ const CheckInController = async (req, res) => {
   }
 };
 
-module.exports = { addBookController, getAllBookController, CheckOutController, CheckInController }
+module.exports = { addBookController, getAllBookController, CheckOutController, CheckInController, getSingleBookController }
 
