@@ -11,7 +11,7 @@ const isPasswordMatch = async (password, email) => {
     let compare = await bcrypt.compare(password, user.password);
     console.log(compare)
     return compare;
-  } 
+  }
 };
 
 module.exports = { getUserByEmail, isPasswordMatch };
